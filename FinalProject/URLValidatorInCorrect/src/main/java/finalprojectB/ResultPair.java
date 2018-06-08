@@ -27,6 +27,7 @@ package finalprojectB;
 
       public ResultPair(String item, boolean valid) {
          this.item = item;
-         this.valid = !valid;  //Weather the individual part of url is valid.
+	//Bug#7 was !valid
+         this.valid = valid;  //Weather the individual part of url is valid.
       }
    }
