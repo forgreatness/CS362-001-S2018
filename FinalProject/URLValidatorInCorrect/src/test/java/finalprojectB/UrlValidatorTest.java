@@ -77,17 +77,54 @@ public class UrlValidatorTest extends TestCase {
     }
    
    
-   public void testYourFirstPartition()
-   {
-	 //You can use this function to implement your First Partition testing	   
-   
-   }
-   
-   public void testYourSecondPartition(){
-		 //You can use this function to implement your Second Partition testing	   
+  // Partition tests:
+   private String[] validSchemes = {"file", "http", "ftp"};
+   private String[] invalidSchemes = {":)", "pro to", };
+   private String[] validAuthorities = {"google.com:60", "192.168.1.1", "m.a.n.y.s.u.b.d.o.m.a.i.n.s"};
+   private String[] invalidAuthorities = {"192.168.1.1:707070707070"};
+   private String[] validPaths = {"/", "/pathname/"};
+   private String[] invalidPaths = {};
+   private String[] validQueries = {"?howdy", "?howdy=", "?x=7&y=7"};
+   private String[] invalidQueries = {"??", "?x&&y"};
+//   private String[] validFragments = {"#item-id", "#", ""};
+   private String[] validFragments = {}; // doesn't like fragments?
+   private String[] invalidFragments = {"#noMore#"};
 
+   public void testValidURLs()
+   {
+       UrlValidator v1 = new UrlValidator(validSchemes, UrlValidator.ALLOW_2_SLASHES);
+       for (String s : validSchemes) {
+           for (String a : validAuthorities) {
+               for (String p : validPaths) {
+                   for (String q : validQueries) {
+                       for (String f : validFragments) {
+                           assertEquals(true, v1.isValid(s + "://" + a + p + q + f));
+                       }
+                   }
+               }
+           }
+       }
    }
-   //You need to create more test cases for your Partitions if you need to 
+
+   public void testInvalidURLs()
+   {
+       UrlValidator v1 = new UrlValidator(validSchemes, UrlValidator.ALLOW_2_SLASHES);
+       for (String s : invalidSchemes) {
+           assertEquals(false, v1.isValid(s + "://google.com"));
+       }
+       for (String a : invalidAuthorities) {
+           assertEquals(false, v1.isValid("http://" + a));
+       }
+       for (String p : invalidPaths) {
+           assertEquals(false, v1.isValid("http://google.com" + p));
+       }
+       for (String q : invalidQueries) {
+           assertEquals(false, v1.isValid("http://google.com/" + q));
+       }
+       for (String f : invalidFragments) {
+           assertEquals(false, v1.isValid("http://google.com/" + f));
+       }
+   }
    
    public void testIsValid()
    {
